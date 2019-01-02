@@ -48,7 +48,8 @@ void ept_handler::set_eptp(ept::mmap *map)
             ept_pointer::page_walk_length_minus_one::set(3U);
 
             enable_ept::enable();
-            unrestricted_guest::enable();
+            if (unrestricted_guest::is_allowed1())
+                unrestricted_guest::enable();
         }
 
         ept_pointer::phys_addr::set(map->eptp());
@@ -63,7 +64,8 @@ void ept_handler::set_eptp(ept::mmap *map)
             ept_pointer::page_walk_length_minus_one::set(0);
 
             enable_ept::disable();
-            unrestricted_guest::disable();
+            if (unrestricted_guest::is_allowed1())
+               unrestricted_guest::disable();
         }
 
         ept_pointer::phys_addr::set(0);
